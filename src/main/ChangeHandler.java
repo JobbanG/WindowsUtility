@@ -1,6 +1,10 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class ChangeHandler {
@@ -16,6 +20,7 @@ public class ChangeHandler {
     public void doOperation(String path) {
         File currentFile = new File(path);
         goThroughFiles(currentFile);
+        System.out.println("Finished renaming all folders under '" + path + "'");
     }
 
     public void goThroughFiles(File currentFile) {
@@ -24,22 +29,25 @@ public class ChangeHandler {
                 goThroughFiles(file);
             }
         }
-        else {
-            RenameFile(currentFile);
-        }
+        RenameFile(currentFile);
     }
 
     private void RenameFile(File currentFile) {
-        boolean success = false;
+        Path path = Paths.get(currentFile.getAbsolutePath());
+        String newName = "";
         switch (operation) {
             case "DEACCENT":
-                success = currentFile.renameTo(new File(fileRenamer.deAccent(currentFile.getName()))); break;
+                newName = fileRenamer.deAccent(currentFile.getName()); break;
             case "LOWERCASE":
-                success = currentFile.renameTo(new File(fileRenamer.toLowerCase(currentFile.getName()))); break;
+                newName = fileRenamer.toLowerCase(currentFile.getName()); break;
             case "UPPERCASE":
-                success = currentFile.renameTo(new File(fileRenamer.toUpperCase(currentFile.getName()))); break;
+                newName = fileRenamer.toUpperCase(currentFile.getName()); break;
         }
-        if (!success) {
+        try {
+            Files.move(path, path.resolveSibling(newName));
+            System.out.println("Renaming file " + path + " to " + path.resolveSibling(newName));
+        }
+        catch (IOException exception) {
             System.out.println("There was an error while renaming file: " + currentFile.getAbsolutePath());
         }
     }

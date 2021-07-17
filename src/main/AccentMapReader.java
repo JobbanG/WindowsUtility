@@ -10,16 +10,16 @@ import java.util.Objects;
 
 public class AccentMapReader {
 
-    private static final String ACCENT_FILE_NAME = "accent_map.txt";
+    private static final String ACCENT_FILE_NAME = "/accent_map.txt";
 
-    public Map<Character, Character> readAccentMap() {
-        Map<Character, Character> accentMap = new HashMap<>();
+    public Map<Integer, Character> readAccentMap() {
+        Map<Integer, Character> accentMap = new HashMap<>();
         InputStream inputStream = getInputStream();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] characters = line.split(",");
-                accentMap.put(characters[0].charAt(0), characters[1].charAt(0));
+                accentMap.put(Integer.parseInt(characters[0]), characters[1].charAt(0));
             }
         }
         catch (IOException exception) {

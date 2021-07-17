@@ -26,6 +26,7 @@ public class ArgumentChecker {
             System.out.println("Path: '" + path + "' is invalid!");
             System.exit(1);
         }
+        System.out.println("Arguments are correct.");
     }
 
 }
